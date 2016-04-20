@@ -119,10 +119,9 @@ var liveTutorialEnabled = false;
 var scrollSyncEnabled = false;
 // Virtual DOM
 var vdom = window.virtualDom
-var html2vtree = window.html2vdom({ VNode: vdom.VNode, VText: vdom.VText })
+var html2vtree = window.vdomParser;
 var currentVTree = null;
 var previewRootDomNode = null;
-
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
@@ -145,16 +144,13 @@ function debounce(func, wait, immediate) {
 
 var updatePreview = function() {
     var newHtml = marked(editor.getSession().getValue())
+    newVTree = html2vtree('<div id="previewWrapper" class="previewWrapper">' + newHtml + '</div>')
 
     if (! currentVTree) {
-        currentVTree = html2vtree(newHtml)
-        currentVTree = vdom.h('div.previewWrapper#previewWrapper', {}, currentVTree)
+        currentVTree = newVTree
         previewRootDomNode = vdom.create(currentVTree)
         preview.appendChild(previewRootDomNode);
     }
-
-    var newVTree = html2vtree(newHtml)
-    newVTree = vdom.h('div.previewWrapper#previewWrapper', {}, newVTree)
 
     var patches = vdom.diff(currentVTree, newVTree);
     previewRootDomNode = vdom.patch(previewRootDomNode, patches);
