@@ -200,9 +200,12 @@ function initialize_editor(local_filename, content, name, real_name, img_upload_
     editor.getSession().setMode("ace/mode/markdown");
     editor.getSession().setUseWrapMode(true);
     editor.getSession().setNewLineMode("unix");
-
+    // Manage editor size
+    editor.setOption('minLines', 1);
+    $(window).resize(resizeEditor);
+    resizeEditor()
     editor.$blockScrolling = Infinity;
-
+    // Editor layout features
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(true);
     editor.renderer.setOption('showLineNumbers', true);
@@ -350,11 +353,21 @@ var isFullscreenEnabled = false;
 function closeFullscreen() {
     $('html, body').removeClass('body-fs');
     isFullscreenEnabled = false;
+    resizeEditor()
 }
+
 function openFullscreen() {
     $('html, body').addClass('body-fs');
     isFullscreenEnabled = true;
+    resizeEditor()
 }
+
+function resizeEditor() {
+    var lineHeight = editor.renderer.lineHeight
+    var maxLines = document.getElementById('editor-wrapper').offsetHeight / lineHeight
+    editor.setOption('maxLines', Math.floor(maxLines) - 1);
+    editor.resize()
+};
 
 function toggleFullscreenMode() {
     if (isFullscreenEnabled) {
