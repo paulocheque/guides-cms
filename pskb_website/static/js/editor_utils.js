@@ -241,7 +241,7 @@ function initialize_editor(local_filename, content, name, real_name, img_upload_
 
     editor.commands.addCommand({
         name: 'fullscreen',
-        bindKey: {win: 'Ctrl-F',  mac: 'Command-F'},
+        bindKey: {win: 'Ctrl-Shift-F',  mac: 'Command-Shift-F'},
         exec: function(editor) {
             toggleFullscreenMode();
             $("#btn-fullscreen-mode").toggleClass('active');
